@@ -1,0 +1,19 @@
+{
+  "name": "vidjot",
+  "version": "1.0.0",
+  "description": "For new YouTube video ideas",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.2",
+    "mongoose": "^5.5.0",
+    "npm": "^6.9.0"
+  }
+}
