@@ -1,0 +1,24 @@
+{{> _bodyheader}}
+
+<div class="container">
+    <div class="row">
+        
+            {{#each ideas}}
+                <div class="col">
+                    <div class="card mb-2" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{title}}</h5>
+                            <p class="card-text text-secondary">{{details}}</p>
+                            <p class="card-text text-secondary">{{_id}}</p>
+                            <p class="card-text text-secondary">{{date}}</p>
+                            <button href="#" class="card-link btn btn-primary btn-sm">Edit</button>
+                            <a href="#" class="card-link">Another link</a>
+                        </div>
+                    </div>
+                </div>   
+            {{/each}}
+       
+    </div>
+</div>
+
+
