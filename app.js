@@ -2,9 +2,17 @@ const express = require('express');
 const hbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const dialog = require('dialog-node');
+const methodOverride = require('method-override');
+
+
+
 
 // intializing express app
 const app = express();
+
+// Method Override middleware
+app.use(methodOverride('_method'));
 
 // mongodb middleware
 mongoose.connect("mongodb://localhost/vidjotdb", { useNewUrlParser: true})
@@ -73,6 +81,57 @@ app.post('/ideas', (req, res) => {
             res.redirect('/ideas');
         });
 });
+
+// Edit ideas form route
+app.get('/ideas/edit/:id', (req, res) => {
+    const title = 'Edit Idea';
+    Idea.findOne({ _id: req.params.id})
+        .then((idea) => {
+            //console.log(idea);
+            res.render('ideas/edit', {title, idea});
+        });
+});
+
+// Process Edit form PUT request
+app.put('/ideas/edit/:id', (req, res) => {
+    Idea.findOne({_id: req.params.id})
+        .then((idea) => {
+            // new values
+            idea.title = req.body.title;
+            idea.details = req.body.details;
+
+            idea.save()
+                .then(idea => {
+                    res.redirect('/ideas');
+                });
+        });
+});
+
+// Process Delete idea request
+app.delete('/ideas/:id', (req, res) => {
+    Idea.findOne({_id: req.params.id})
+        .then(idea => {
+
+            idea.remove()
+                .then(idea => {
+                    console.log(`Idea Deleted with id ${idea._id}`);
+                    res.redirect('/ideas');
+                });
+
+            // dialog.question(`Are you sure want to delete ${idea.title}`,'Confirm','',(code, retVal, stderr) => {
+            //     if (retVal == "OK") {
+            //         idea.remove()
+            //         .then(idea => {
+            //             console.log(`Idea Deleted with id ${idea._id}`);
+            //             res.redirect('/ideas');
+            //         });
+            //     } else {
+            //         res.redirect('/ideas');
+            //     }
+            // });
+        });
+});
+
 
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
