@@ -10,8 +10,12 @@ const flash = require('connect-flash');
 
 
 
+
 // intializing express app
 const app = express();
+
+// Express static folder
+app.use(express.static(__dirname + '/public'));
 
 // Method Override middleware
 app.use(methodOverride('_method'));
@@ -33,8 +37,7 @@ mongoose.connect("mongodb://localhost/vidjotdb", { useNewUrlParser: true})
     .catch(err => console.log(err));
 
 
-// Load routes
-const ideasRoutes = require('./routes/ideas');
+
 
 // Express handlebars middleware
 app.engine('hbs', hbs({defaultLayout: 'main', extname: '.hbs'}));
@@ -44,32 +47,32 @@ app.set('view engine', 'hbs');
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// Load routes
+const ideasRoutes = require('./routes/ideas');
+
 // Global variables
 app.use(function(req, res, next){
-    app.locals.info = req.flash('info');
-    console.log(req.flash('info'));
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+
+    //console.log(res.locals.success_msg);
     next();
 });
-
-
-// Express static folder
-app.use(express.static(__dirname + '/public'));
 
 // Intializing port
 const port = 5000;
 
+
+
 // GET index route
 app.get('/', (req, res) => {
     var title = 'Home';
-    req.flash('info', 'Flash is back!');
-    console.log(req.flash('info'));
     res.render('index', {title});
 });
 
 // GET about route
 app.get('/about', (req, res) => {
     var title = 'About';
-    req.flash('info', 'Flash is back!');
     res.render('about', {title});
 });
 

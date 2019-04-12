@@ -35,6 +35,7 @@ router.post('/', (req, res) => {
         .save()
         .then((ideas) => {
             console.log('Data saved to db..');
+            req.flash('success_msg', 'Video idea succesfully saved to db.');
             res.redirect('/ideas');
         });
 });
@@ -44,7 +45,6 @@ router.get('/edit/:id', (req, res) => {
     const title = 'Edit Idea';
     Idea.findOne({ _id: req.params.id})
         .then((idea) => {
-            //console.log(idea);
             res.render('ideas/edit', {title, idea});
         });
 });
@@ -59,6 +59,8 @@ router.put('/edit/:id', (req, res) => {
 
             idea.save()
                 .then(idea => {
+                    console.log('Data has been updated.');
+                    req.flash('success_msg', 'Video idea has been successfully updated.');
                     res.redirect('/ideas');
                 });
         });
@@ -72,6 +74,7 @@ router.delete('/:id', (req, res) => {
             idea.remove()
                 .then(idea => {
                     console.log(`Idea Deleted with id ${idea._id}`);
+                    req.flash('success_msg', 'Video idea has been deleted.');
                     res.redirect('/ideas');
                 });
 
