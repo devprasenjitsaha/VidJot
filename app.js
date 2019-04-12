@@ -1,11 +1,12 @@
 const express = require('express');
-const hbs = require('express-handlebars');
+const exphbs  = require('express-handlebars');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dialog = require('dialog-node');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const flash = require('connect-flash');
+const DateDiff = require('date-diff');
 
 
 
@@ -37,11 +38,37 @@ mongoose.connect("mongodb://localhost/vidjotdb", { useNewUrlParser: true})
     .catch(err => console.log(err));
 
 
-
-
 // Express handlebars middleware
-app.engine('hbs', hbs({defaultLayout: 'main', extname: '.hbs'}));
+var hbs = exphbs.create({
+    defaultLayout: 'main',
+    helpers: {
+        datediff: function (prevDate) {
+            const currentDate = Date.now();
+            var date1 = new Date(currentDate); // 2015-12-1
+            var date2 = new Date(prevDate); // 2014-01-1
+
+            var diff = new DateDiff(date1, date2);
+
+            var seconds = parseInt(diff.seconds());
+
+            var days = Math.floor(seconds / (3600*24));
+            seconds  -= days*3600*24;
+            var hrs   = Math.floor(seconds / 3600);
+            seconds  -= hrs*3600;
+            var mnts = Math.floor(seconds / 60);
+            seconds  -= mnts*60;
+            const datediffResult = ("Added " +days+"d "+hrs+"h "+mnts+"m "+seconds+"s ago");
+
+            return datediffResult;
+        }
+        
+    },
+    extname: '.hbs'
+});
+    
+app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
+
 
 // BodyParser Middleware
 app.use(bodyParser.urlencoded({ extended: false }))
