@@ -27,8 +27,6 @@ app.use(session({
 app.use(flash());
 
 
-
-
 // mongodb middleware
 mongoose.connect("mongodb://localhost/vidjotdb", { useNewUrlParser: true})
     .then( () => console.log('MongoDB connected....'))
